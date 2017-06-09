@@ -2,9 +2,9 @@
   "name": "web-audio-api",
   "version": "1.0.0",
   "description": "",
-  "main": "web-audio.js",
+  "main": "main.js",
   "scripts": {
-    "build:js": "mkdir -p dist/js && browserify ./src/js/web-audio.js -o ./dist/js/web-audio.js -t babelify --presets es2015",
+    "build:js": "mkdir -p dist/js && browserify ./src/js/main.js -o ./dist/js/main.js -t babelify --presets es2015",
     "watch:js": "onchange './src/js/**/*.js' -- npm run build:js",
     "dev": "npm run build:js && npm run watch:js",
     "test": "echo \"Error: no test specified\" && exit 1"
