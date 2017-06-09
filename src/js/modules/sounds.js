@@ -1,22 +1,33 @@
 // Sets up audio context
 const audioContext = new window.AudioContext();
 
-function playRhythm(sound) {
-    // console.log(Array.isArray(soundsArray));
-    // console.log(soundsArray[0]);
-    // const hiHat = soundsArray[0];
-    // const kick = soundsArray[1];
-    // const snare = soundsArray[2];
+function playRhythm(soundsArray) {
+
+    console.log(Array.isArray(soundsArray));
+    console.log(soundsArray[0]);
+    console.log(soundsArray[1]);
+    console.log(soundsArray[2]);
+    const hiHat = soundsArray[0];
+    const kick = soundsArray[1];
+    const snare = soundsArray[2];
 
     // TODO: Loop through soundsArray.
     // Start playing the rhythm 100ms from "now" (now being when you click);
     const startTime = audioContext.currentTime + 0.100;
-    const tempo = 60; // Beats per minute
+    const tempo = 120; // Beats per minute
+    const quarterNoteTime = 60 / tempo;
 
     const playButton = document.querySelector('[data-hook="play-button"]');    
     playButton.addEventListener('click', () => {
-        playSound(sound, startTime);
-        // playSound(hiHat, startTime + 0.5);
+        playSound(kick, startTime);
+        // playSound(hiHat, startTime);
+        playSound(kick, startTime + quarterNoteTime);
+        playSound(hiHat, startTime + 2*quarterNoteTime);
+        playSound(kick, startTime + 3*quarterNoteTime);
+        // playSound(snare, startTime);
+        // soundsArray.forEach(sound => {
+        //     playSound(sound, startTime + Math.random());
+        // })
     });
 }
 
@@ -40,29 +51,54 @@ function playSound(buffer, time) {
 // TODO Add try catch to the async using await
 // TODO: Store the sounds in localStorage
 async function fetchSounds() {
-    // const soundFiles = ['hi-hat', 'kick', 'snare'];
+    const soundFiles = ['hi-hat', 'kick', 'snare'];
     // let bufferSounds = [];
 
-    fetch(`../dist/audio/hi-hat.wav`)
-        .then(response => {
-            return response.arrayBuffer();
-        })
-        .then(buffer => {
-            audioContext.decodeAudioData(buffer, decodedData => {
-                playRhythm(decodedData);
-            });
-        });
-
-    // Promise.all(soundFiles.map(sound => {
+    // fetch(`../dist/audio/hi-hat.wav`)
     //     .then(response => {
     //         return response.arrayBuffer();
     //     })
     //     .then(buffer => {
     //         audioContext.decodeAudioData(buffer, decodedData => {
-    //             bufferSounds.push(decodedData);
+    //             playRhythm(decodedData);
     //         });
     //     });
-    // }));
+        
+    const files = soundFiles.map(sound => {
+        return new Promise((resolve, reject) => { 
+            fetch(`../dist/audio/${sound}.wav`).then(response => {
+                return response.arrayBuffer();
+            })
+            .then(buffer => {
+                audioContext.decodeAudioData(buffer, decodedData => {
+                    resolve(decodedData);
+                });
+            });
+         });
+    });
+    
+    Promise.all(files).then(sounds => {
+        playRhythm(sounds);
+    });
+
+    // var p1 = new Promise((resolve, reject) => { 
+    // setTimeout(resolve, 1000, 'one'); 
+    // }); 
+    // var p2 = new Promise((resolve, reject) => { 
+    // setTimeout(resolve, 2000, 'two'); 
+    // });
+    // var p3 = new Promise((resolve, reject) => {
+    // setTimeout(resolve, 3000, 'three');
+    // });
+    // var p4 = new Promise((resolve, reject) => {
+    // setTimeout(resolve, 4000, 'four');
+    // });
+
+    // Promise.all([p1, p2, p3, p4]).then(values => { 
+    // console.log('all', values);
+    // }, reason => {
+    // console.log(reason)
+    // });
 
     // playRhythm(bufferSounds);
 }
