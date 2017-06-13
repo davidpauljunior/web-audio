@@ -48,11 +48,8 @@ function playSound(buffer, time) {
     sourceNode.start(time);
 }
 
-// TODO Add try catch to the async using await
 // TODO: Store the sounds in localStorage
-async function fetchSounds() {
-    const soundFiles = ['hi-hat', 'kick', 'snare'];
-    // let bufferSounds = [];
+function fetchSound(file) {
 
     // fetch(`../dist/audio/hi-hat.wav`)
     //     .then(response => {
@@ -63,47 +60,69 @@ async function fetchSounds() {
     //             playRhythm(decodedData);
     //         });
     //     });
-        
-    const files = soundFiles.map(sound => {
-        return new Promise((resolve, reject) => { 
-            fetch(`../dist/audio/${sound}.wav`).then(response => {
-                return response.arrayBuffer();
+
+    /**
+     * https://developers.google.com/web/fundamentals/getting-started/primers/promises
+     * The promise constructor takes one argument, a callback with two parameters, resolve and reject. 
+     * Do something within the callback, perhaps async, then call resolve if everything worked, otherwise call reject.
+     */
+    return new Promise((resolve, reject) => {
+
+        // Should this be an if (successful response.
+        fetch(`../dist/audio/${file}.wav`)
+            .then(response => {
+                    if (response.status !== 200) {  
+                        console.log(`Looks like there was a problem. Status Code: ${response.status}`);  
+                        return;  
+                    }
+
+                    response.arrayBuffer()
+                        .then(buffer => {
+                            audioContext.decodeAudioData(buffer, decodedData => {
+                                resolve(decodedData); // TODO: check this (can it be a return?)
+                            });
+                        })
             })
-            .then(buffer => {
-                audioContext.decodeAudioData(buffer, decodedData => {
-                    resolve(decodedData);
-                });
+        
+            // Where do I put the reject?
+            .catch(err => {
+                console.log(`fetch error: ${err}`)
             });
-         });
     });
+        
+    // const files = soundFiles.map(sound => {
+    //     return new Promise((resolve, reject) => { 
+    //         fetch(`../dist/audio/${sound}.wav`).then(response => {
+    //             return response.arrayBuffer();
+    //         })
+    //         .then(buffer => {
+    //             audioContext.decodeAudioData(buffer, decodedData => {
+    //                 resolve(decodedData);
+    //             });
+    //         });
+    //      });
+    // });
     
-    Promise.all(files).then(sounds => {
-        playRhythm(sounds);
-    });
-
-    // var p1 = new Promise((resolve, reject) => { 
-    // setTimeout(resolve, 1000, 'one'); 
-    // }); 
-    // var p2 = new Promise((resolve, reject) => { 
-    // setTimeout(resolve, 2000, 'two'); 
+    // Promise.all(files).then(sounds => {
+    //     playRhythm(sounds);
     // });
-    // var p3 = new Promise((resolve, reject) => {
-    // setTimeout(resolve, 3000, 'three');
-    // });
-    // var p4 = new Promise((resolve, reject) => {
-    // setTimeout(resolve, 4000, 'four');
-    // });
-
-    // Promise.all([p1, p2, p3, p4]).then(values => { 
-    // console.log('all', values);
-    // }, reason => {
-    // console.log(reason)
-    // });
-
-    // playRhythm(bufferSounds);
 }
 
-module.exports = {init: fetchSounds};
+function init() {
+    const soundFiles = ['hi-hat', 'kick', 'snare'];
+
+    // This returns the audio buffers but not in an array.
+    soundFiles.map(file => {
+        fetchSound(file).then(sound => {
+            console.log(sound);
+        })
+    });
+
+    //this line works -> gives the audio buffer
+    fetchSound('hi-hat').then(sound => {console.log(sound)});
+}
+
+module.exports = {init: init};
 
 /**
  * Next steps:

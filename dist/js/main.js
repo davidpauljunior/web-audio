@@ -27,20 +27,11 @@ function playRhythm(soundsArray) {
 
     const playButton = document.querySelector('[data-hook="play-button"]');
     playButton.addEventListener('click', () => {
-        // Play the kick drum on beats 1, 2, 3, 4
         playSound(kick, startTime);
+        // playSound(hiHat, startTime);
         playSound(kick, startTime + quarterNoteTime);
-        playSound(kick, startTime + 2 * quarterNoteTime);
+        playSound(hiHat, startTime + 2 * quarterNoteTime);
         playSound(kick, startTime + 3 * quarterNoteTime);
-
-        // Play the snare drum on beats 2, 4
-        playSound(snare, startTime + quarterNoteTime);
-        playSound(snare, startTime + 3 * quarterNoteTime);
-
-        // Play the hi-hat every 16th note.
-        for (var i = 0; i < 16; ++i) {
-            playSound(hiHat, startTime + i * 0.25 * quarterNoteTime);
-        }
         // playSound(snare, startTime);
         // soundsArray.forEach(sound => {
         //     playSound(sound, startTime + Math.random());
@@ -65,11 +56,8 @@ function playSound(buffer, time) {
     sourceNode.start(time);
 }
 
-// TODO Add try catch to the async using await
 // TODO: Store the sounds in localStorage
-async function fetchSounds() {
-    const soundFiles = ['hi-hat', 'kick', 'snare'];
-    // let bufferSounds = [];
+function fetchSound(file) {
 
     // fetch(`../dist/audio/hi-hat.wav`)
     //     .then(response => {
@@ -81,45 +69,68 @@ async function fetchSounds() {
     //         });
     //     });
 
-    const files = soundFiles.map(sound => {
-        return new Promise((resolve, reject) => {
-            fetch(`../dist/audio/${sound}.wav`).then(response => {
-                return response.arrayBuffer();
-            }).then(buffer => {
+    /**
+     * https://developers.google.com/web/fundamentals/getting-started/primers/promises
+     * The promise constructor takes one argument, a callback with two parameters, resolve and reject. 
+     * Do something within the callback, perhaps async, then call resolve if everything worked, otherwise call reject.
+     */
+    return new Promise((resolve, reject) => {
+
+        // Should this be an if (successful response.
+        fetch(`../dist/audio/${file}.wav`).then(response => {
+            if (response.status !== 200) {
+                console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+                return;
+            }
+
+            response.arrayBuffer().then(buffer => {
                 audioContext.decodeAudioData(buffer, decodedData => {
-                    resolve(decodedData);
+                    resolve(decodedData); // TODO: check this (can it be a return?)
                 });
             });
+        })
+
+        // Where do I put the reject?
+        .catch(err => {
+            console.log(`fetch error: ${err}`);
         });
     });
 
-    Promise.all(files).then(sounds => {
-        playRhythm(sounds);
-    });
-
-    // var p1 = new Promise((resolve, reject) => { 
-    // setTimeout(resolve, 1000, 'one'); 
-    // }); 
-    // var p2 = new Promise((resolve, reject) => { 
-    // setTimeout(resolve, 2000, 'two'); 
-    // });
-    // var p3 = new Promise((resolve, reject) => {
-    // setTimeout(resolve, 3000, 'three');
-    // });
-    // var p4 = new Promise((resolve, reject) => {
-    // setTimeout(resolve, 4000, 'four');
+    // const files = soundFiles.map(sound => {
+    //     return new Promise((resolve, reject) => { 
+    //         fetch(`../dist/audio/${sound}.wav`).then(response => {
+    //             return response.arrayBuffer();
+    //         })
+    //         .then(buffer => {
+    //             audioContext.decodeAudioData(buffer, decodedData => {
+    //                 resolve(decodedData);
+    //             });
+    //         });
+    //      });
     // });
 
-    // Promise.all([p1, p2, p3, p4]).then(values => { 
-    // console.log('all', values);
-    // }, reason => {
-    // console.log(reason)
+    // Promise.all(files).then(sounds => {
+    //     playRhythm(sounds);
     // });
-
-    // playRhythm(bufferSounds);
 }
 
-module.exports = { init: fetchSounds };
+function init() {
+    const soundFiles = ['hi-hat', 'kick', 'snare'];
+
+    // This returns the audio buffers but not in an array.
+    soundFiles.map(file => {
+        fetchSound(file).then(sound => {
+            console.log(sound);
+        });
+    });
+
+    //this line works -> gives the audio buffer
+    fetchSound('hi-hat').then(sound => {
+        console.log(sound);
+    });
+}
+
+module.exports = { init: init };
 
 /**
  * Next steps:
