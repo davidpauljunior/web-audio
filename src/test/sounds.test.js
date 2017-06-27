@@ -1,7 +1,10 @@
 const sounds = require('../../src/js/modules/sounds');
 
-test('should fail if any sound is not fetched', () => {
-    // const spy = jest.spyOn(console, 'log'); // Mocked function
+test('the fetch fails with an error', async () => {
+    expect.assertions(1);
+});
+
+// const spy = jest.spyOn(console, 'log'); // Mocked function
     // const init = loopingTriangle.init();
 
     // expect(spy).toHaveBeenCalled();
@@ -35,4 +38,3 @@ test('should fail if any sound is not fetched', () => {
 
     // spy.mockReset();
     // spy.mockRestore();
-});
