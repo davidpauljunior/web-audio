@@ -1,0 +1,10 @@
+@import '../20-functions/em';
+
+// Can't use the global- prefix as 'include-media' plugin explicitly requires the map to be named 'breakpoints'.
+$breakpoints: (
+    'xs': em(300px),
+    'sm': em(480px),
+    'md': em(700px),
+    'lg': em(960px),
+    'xl': em(1280px)
+);

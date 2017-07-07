@@ -1,0 +1,16 @@
+.kit {
+    display: flex;
+}
+
+.kit__pad {
+    padding: 3rem;
+    background-color: #097ab5;
+    color: #fff;
+    flex: 1 1 25%;
+    text-align: center;
+    cursor: pointer;
+
+    & + & {
+        margin-left: 1px;
+    }
+}

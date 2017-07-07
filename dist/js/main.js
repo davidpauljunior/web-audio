@@ -24,6 +24,49 @@ function playSound(buffer, time) {
     sourceNode.buffer = buffer;
     sourceNode.connect(audioContext.destination);
     sourceNode.start(time);
+
+    // This needs to resolve a promise once the sound has finished playing (based on the length of the sound)
+    // That promise can then be use to toggle a class to show what sounds are playing at what points.
+}
+
+function playSoundFromPad(soundsArray) {
+    const hiHat = soundsArray[0];
+    const kick = soundsArray[1];
+    const snare = soundsArray[2];
+
+    const soundPads = document.querySelectorAll('[data-drum]');
+    // const activeClass = 'kit__pad--is-active';
+
+    soundPads.forEach(pad => {
+        const drum = pad.dataset.drum;
+
+        pad.addEventListener('click', () => {
+            if (drum == 'hi-hat') {
+                playSound(hiHat);
+            } else if (drum == 'kick') {
+                playSound(kick);
+            } else if (drum == 'snare') {
+                playSound(snare);
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'l' || event.key === 'q') {
+                // pad.classList.toggle(activeClass);
+                playSound(hiHat);
+            } else if (event.key === 's') {
+                // pad.classList.toggle(activeClass);
+                playSound(kick);
+            } else if (event.key === 'd') {
+                // pad.classList.toggle(activeClass);
+                playSound(snare);
+            }
+        });
+    });
+}
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function playRhythm(soundsArray) {
@@ -31,31 +74,37 @@ function playRhythm(soundsArray) {
     const kick = soundsArray[1];
     const snare = soundsArray[2];
 
-    const tempo = 200; // Beats per minute
+    const tempo = 120; // Beats per minute
     const quarterNoteTime = 60 / tempo;
     const eighthNoteTime = quarterNoteTime / 2;
 
     const playButton = document.querySelector('[data-hook="play-button"]');
 
     playButton.addEventListener('click', () => {
-        const startTime = audioContext.currentTime;
+        async function loopRhythm() {
+            const startTime = audioContext.currentTime;
 
-        playSound(hiHat, startTime);
-        playSound(kick, startTime);
-        playSound(kick, startTime + eighthNoteTime);
-        playSound(hiHat, startTime + quarterNoteTime);
-        playSound(hiHat, startTime + 2 * quarterNoteTime);
-        playSound(snare, startTime + 2 * quarterNoteTime);
-        playSound(hiHat, startTime + 3 * quarterNoteTime);
-        playSound(kick, startTime + 3 * quarterNoteTime + eighthNoteTime);
-        playSound(hiHat, startTime + 4 * quarterNoteTime);
-        playSound(kick, startTime + 4 * quarterNoteTime + eighthNoteTime);
-        playSound(hiHat, startTime + 5 * quarterNoteTime);
-        playSound(kick, startTime + 5 * quarterNoteTime + eighthNoteTime);
-        playSound(hiHat, startTime + 6 * quarterNoteTime);
-        playSound(snare, startTime + 6 * quarterNoteTime);
+            playSound(hiHat, startTime);
+            playSound(kick, startTime);
+            playSound(hiHat, startTime + quarterNoteTime);
+            playSound(snare, startTime + quarterNoteTime);
+
+            playSound(hiHat, startTime + quarterNoteTime + quarterNoteTime);
+            playSound(kick, startTime + quarterNoteTime + quarterNoteTime);
+            playSound(kick, startTime + quarterNoteTime + quarterNoteTime + eighthNoteTime);
+            playSound(hiHat, startTime + quarterNoteTime + quarterNoteTime + quarterNoteTime);
+            playSound(snare, startTime + quarterNoteTime + quarterNoteTime + quarterNoteTime);
+
+            await sleep(2000);
+            loopRhythm();
+        }
+
+        loopRhythm();
     });
 }
+
+// Put the above into a function and do a setTimeout inside that with the delay an extra quarter beat.
+// Clear internval or whatever to finish it.
 
 function decodeAudio(buffer) {
     return new Promise(resolve => {
@@ -92,6 +141,7 @@ function init() {
     Promise.all(soundPromises).then(soundPromise => {
         console.log(soundPromise);
         playRhythm(soundPromise);
+        playSoundFromPad(soundPromise);
     }).catch(err => {
         console.log(`fetch error: ${err}`);
     });
