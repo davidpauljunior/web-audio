@@ -29,13 +29,24 @@ function playSound(buffer, time) {
     // That promise can then be use to toggle a class to show what sounds are playing at what points.
 }
 
+function toggleClass(el, soundDuration) {
+    const activeClassName = 'kit__pad--is-active';
+    const durationMs = soundDuration * 1000;
+
+    el.classList.add(activeClassName);
+    setTimeout(() => {
+        el.classList.remove(activeClassName);
+    }, durationMs);
+}
+
 function playSoundFromPad(soundsArray) {
     const hiHat = soundsArray[0];
     const kick = soundsArray[1];
     const snare = soundsArray[2];
 
     const soundPads = document.querySelectorAll('[data-drum]');
-    // const activeClass = 'kit__pad--is-active';
+
+    console.log(hiHat.duration, kick.duration, snare.duration);
 
     soundPads.forEach(pad => {
         const drum = pad.dataset.drum;
@@ -43,22 +54,22 @@ function playSoundFromPad(soundsArray) {
         pad.addEventListener('click', () => {
             if (drum == 'hi-hat') {
                 playSound(hiHat);
+                toggleClass(pad, hiHat.duration);
             } else if (drum == 'kick') {
                 playSound(kick);
+                toggleClass(pad, kick.duration);
             } else if (drum == 'snare') {
                 playSound(snare);
+                toggleClass(pad, snare.duration);
             }
         });
 
         document.addEventListener('keydown', event => {
             if (event.key === 'l' || event.key === 'q') {
-                // pad.classList.toggle(activeClass);
                 playSound(hiHat);
             } else if (event.key === 's') {
-                // pad.classList.toggle(activeClass);
                 playSound(kick);
             } else if (event.key === 'd') {
-                // pad.classList.toggle(activeClass);
                 playSound(snare);
             }
         });
@@ -140,6 +151,7 @@ function init() {
 
     Promise.all(soundPromises).then(soundPromise => {
         console.log(soundPromise);
+
         playRhythm(soundPromise);
         playSoundFromPad(soundPromise);
     }).catch(err => {
