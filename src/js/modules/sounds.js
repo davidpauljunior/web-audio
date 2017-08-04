@@ -128,7 +128,7 @@ function decodeAudio(buffer) {
 
 // TODO: Store the sounds in localStorage
 async function fetchSound(file) {
-    const response = await fetch(`../dist/audio/${file}.wav`);
+    const response = await fetch(`./dist/audio/${file}.wav`);
 
     if (response.status !== 200) {
         // Throw error because that's how .catch in init would get it
