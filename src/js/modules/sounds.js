@@ -1,3 +1,6 @@
+// TODO: fire event qhen sound endsa to avpid reliance on duration
+
+
 // Sets up audio context
 const audioContext = new window.AudioContext();
 

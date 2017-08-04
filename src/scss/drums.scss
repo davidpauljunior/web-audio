@@ -14,10 +14,14 @@
 "30-mixins/container";
 
 @import
+"40-base/base",
 "40-base/typography";
 
 @import
 "50-components/kit";
+
+@import
+"60-patterns/rhythm";
 
 @import
 "70-utilities/container";

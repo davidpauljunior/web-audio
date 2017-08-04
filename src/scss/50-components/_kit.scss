@@ -9,11 +9,12 @@
     }
 }
 
-.kit {
+.c-kit {
     display: flex;
+    margin-bottom: 100px;
 }
 
-.kit__pad {
+.c-kit__pad {
     padding: 3rem;
     background-color: #097ab5;
     color: #fff;
@@ -50,7 +51,7 @@
     }
 }
 
-.kit__text {
+.c-kit__text {
     position: relative;
     z-index: 1;
 }
