@@ -35,23 +35,18 @@ $play-button-size: 50px;
     border-radius: 50%;
 }
 
-/**
- *
- * Element created in cursor.js
- *
- **/
-
-.js-cursor {
+.p-rhythm__cursor {
     position: absolute;
-    background-color: #097ab5;
-    width: 1px;
+    background-color: rgba(18, 248, 126, 0.1);
+    width: 0;
     top: 0;
     bottom: 0;
-    left: -1px; // Border of p-rhythm__bar
-    transform: translateX(0);
+    left: 0;
 
     &.is-playing {
-        transition: transform 1s linear;
-        transform: translateX(100px);
+        width: 100%;
+        transition: width 5s linear;
     }
 }
+
+

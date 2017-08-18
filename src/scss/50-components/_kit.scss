@@ -43,7 +43,7 @@
         background-color: darken(#097ab5, 10%);
     }
 
-    &--is-active {
+    &.is-playing {
         &::before {
             opacity: 1;
             animation: scale 600ms;
