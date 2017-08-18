@@ -1,5 +1,6 @@
 const playSound = require('./playSound');
 
+// This function requires sounds
 function hasCursorPassedNote(bar, cursor, sounds) {
     const cursorRect = cursor.getBoundingClientRect();
     const notes = [...bar.querySelectorAll('[data-note]')];
@@ -8,19 +9,21 @@ function hasCursorPassedNote(bar, cursor, sounds) {
         const noteRect = note.getBoundingClientRect();
 
         if (cursorRect.right >= noteRect.left) {
-            console.log(sounds);
-            console.log(cursorRect.right);
-            console.log('BOOM SHAKALAKA');
             playSound(note, sounds[1]);
             return;
         }
 
         window.requestAnimationFrame(()=> {
-                hasCursorPassedNote(bar, cursor, sounds)
+            hasCursorPassedNote(bar, cursor, sounds)
         });
     });
 }
 
+// Can the above could simply return a boolean??
+// Keep calling the request anim until it returns true.
+// if it returns true, call a different function called
+
+// doesn't require the sounds array
 function playRhythm(rhythm, sounds) {
     const bars = [...rhythm.querySelectorAll('[data-bar]')];
     const playButton = rhythm.querySelector('[data-play]');

@@ -26,3 +26,11 @@ function playSound(triggerEl, buffer, time) {
 }
 
 module.exports = playSound;
+
+/**
+ * Next steps (copied from elsewhere) - do I need this??
+ * 
+ * So far we have seen just a source and destination node, but WebAudio has many other node kinds. 
+ * To create a drum app you could create multiple source nodes, one for each drum, connected to a single output using an AudioChannelMerger. 
+ * We could also change the gain of each drum using AudioGainNodes.
+ */

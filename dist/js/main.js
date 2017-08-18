@@ -5,6 +5,7 @@ const getSounds = require('./modules/getSounds');
 document.addEventListener('DOMContentLoaded', () => {
     async function init() {
         const sounds = await getSounds.init();
+        // body.classList.remove('loading');
 
         console.log(sounds);
         playRhythm.init(sounds);
@@ -12,25 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     init();
 });
-
-// async function init() {
-//     const sounds = await getSounds.init();
-//     body.classList.removeClass('loading');
-//     const someData = module2.init(sounds):
-//     module2.init(someData):
-//     module3.init():
-//     module4.init():
-// }
-
-// init();
-
-/**
- * Next steps (copied from elsewhere) - do I need this??
- * 
- * So far we have seen just a source and destination node, but WebAudio has many other node kinds. 
- * To create a drum app you could create multiple source nodes, one for each drum, connected to a single output using an AudioChannelMerger. 
- * We could also change the gain of each drum using AudioGainNodes.
- */
 
 },{"./modules/getSounds":3,"./modules/playRhythm":4}],2:[function(require,module,exports){
 let ctx;
@@ -89,6 +71,7 @@ module.exports = { init: init };
 },{"./audioContext":2}],4:[function(require,module,exports){
 const playSound = require('./playSound');
 
+// This function requires sounds
 function hasCursorPassedNote(bar, cursor, sounds) {
     const cursorRect = cursor.getBoundingClientRect();
     const notes = [...bar.querySelectorAll('[data-note]')];
@@ -97,10 +80,7 @@ function hasCursorPassedNote(bar, cursor, sounds) {
         const noteRect = note.getBoundingClientRect();
 
         if (cursorRect.right >= noteRect.left) {
-            console.log(sounds);
-            console.log(cursorRect.right);
-            console.log('BOOM SHAKALAKA');
-            playSound(note, sounds[0]);
+            playSound(note, sounds[1]);
             return;
         }
 
@@ -110,6 +90,11 @@ function hasCursorPassedNote(bar, cursor, sounds) {
     });
 }
 
+// Can the above could simply return a boolean??
+// Keep calling the request anim until it returns true.
+// if it returns true, call a different function called
+
+// doesn't require the sounds array
 function playRhythm(rhythm, sounds) {
     const bars = [...rhythm.querySelectorAll('[data-bar]')];
     const playButton = rhythm.querySelector('[data-play]');
@@ -169,5 +154,13 @@ function playSound(triggerEl, buffer, time) {
 }
 
 module.exports = playSound;
+
+/**
+ * Next steps (copied from elsewhere) - do I need this??
+ * 
+ * So far we have seen just a source and destination node, but WebAudio has many other node kinds. 
+ * To create a drum app you could create multiple source nodes, one for each drum, connected to a single output using an AudioChannelMerger. 
+ * We could also change the gain of each drum using AudioGainNodes.
+ */
 
 },{"./audioContext":2}]},{},[1]);
