@@ -71,23 +71,21 @@ module.exports = { init: init };
 },{"./audioContext":2}],4:[function(require,module,exports){
 const playSound = require('./playSound');
 
-// This function requires sounds
-function hasCursorPassedNote(bar, cursor, sounds) {
+function hasNoteBeenPassed(cursor, note) {
+    // TODO: don't want to keep defining this every animation call
+    // Could take an obj which contains the cursor, the note, the note position?
+    const noteRect = note.getBoundingClientRect();
     const cursorRect = cursor.getBoundingClientRect();
-    const notes = [...bar.querySelectorAll('[data-note]')];
 
-    notes.forEach(note => {
-        const noteRect = note.getBoundingClientRect();
-
-        if (cursorRect.right >= noteRect.left) {
-            playSound(note, sounds[1]);
-            return;
-        }
-
+    if (cursorRect.right >= noteRect.left) {
+        console.log('note has now been passed');
+        return true;
+    } else {
+        console.log('not yet passed');
         window.requestAnimationFrame(() => {
-            hasCursorPassedNote(bar, cursor, sounds);
+            hasNoteBeenPassed(cursor, note);
         });
-    });
+    }
 }
 
 // Can the above could simply return a boolean??
@@ -102,15 +100,23 @@ function playRhythm(rhythm, sounds) {
     playButton.addEventListener('click', () => {
         bars.forEach((bar, i) => {
             const cursor = bar.querySelector('[data-cursor]');
+            const cursorRect = cursor.getBoundingClientRect();
 
             // needs to know when at end of that bar
             // then up the counter to next bar
-            if (i === 0) {
-                bar.dataset.currentBar = 'true';
-                cursor.classList.add('is-playing');
-            }
+            // let currentBar;
+            // Then once the cursor gets to the end, bump the currentBar to be bar, i++ ??;
 
-            hasCursorPassedNote(bar, cursor, sounds);
+            // if (i === 0) { maybe something }
+
+            bar.dataset.currentBar = 'true';
+            cursor.classList.add('is-playing'); // starts the animation
+
+            const notes = [...bar.querySelectorAll('[data-note]')];
+
+            notes.forEach(note => {
+                hasNoteBeenPassed(cursor, note);
+            });
         });
     });
 }
