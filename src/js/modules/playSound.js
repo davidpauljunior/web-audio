@@ -1,7 +1,7 @@
 const audioContext = require('./audioContext');
 
-function playSound(triggerEl, buffer, time) {
-    const startTime = (typeof time === 'undefined') ? audioContext.currentTime : time; 
+function playSound(buffer, time, triggerEl) {
+    const startTime = (typeof time === 'undefined') ? audioContext.currentTime : time;
 
     /**
      * https://joshondesign.com/p/books/canvasdeepdive/chapter12.html
@@ -18,11 +18,13 @@ function playSound(triggerEl, buffer, time) {
     sourceNode.connect(audioContext.destination);
     sourceNode.start(startTime);
 
-    triggerEl.classList.add('is-playing');
-
-    sourceNode.onended = () => {
-        triggerEl.classList.remove('is-playing');
-    };
+    if (typeof triggerEl !== 'undefined') {
+        triggerEl.classList.add('is-playing');
+        
+        sourceNode.onended = () => {
+            triggerEl.classList.remove('is-playing');
+        };
+    }
 }
 
 module.exports = playSound;

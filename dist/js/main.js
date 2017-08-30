@@ -71,19 +71,16 @@ module.exports = { init: init };
 },{"./audioContext":2}],4:[function(require,module,exports){
 const playSound = require('./playSound');
 
-function hasNoteBeenPassed(cursor, note) {
-    // TODO: don't want to keep defining this every animation call
-    // Could take an obj which contains the cursor, the note, the note position?
-    const noteRect = note.getBoundingClientRect();
+function hasNoteBeenPassed(cursor, noteRect, sound) {
     const cursorRect = cursor.getBoundingClientRect();
 
     if (cursorRect.right >= noteRect.left) {
         console.log('note has now been passed');
-        return true;
+        playSound(sound);
     } else {
         console.log('not yet passed');
         window.requestAnimationFrame(() => {
-            hasNoteBeenPassed(cursor, note);
+            hasNoteBeenPassed(cursor, noteRect, sound);
         });
     }
 }
@@ -91,6 +88,17 @@ function hasNoteBeenPassed(cursor, note) {
 // Can the above could simply return a boolean??
 // Keep calling the request anim until it returns true.
 // if it returns true, call a different function called
+
+function getSoundForNote(noteType, sounds) {
+    let sound;
+    if (noteType === 'kick') {
+        sound = sounds[1];
+    } else if (noteType === 'snare') {
+        sound = sounds[2];
+    }
+
+    return sound;
+}
 
 // doesn't require the sounds array
 function playRhythm(rhythm, sounds) {
@@ -115,7 +123,11 @@ function playRhythm(rhythm, sounds) {
             const notes = [...bar.querySelectorAll('[data-note]')];
 
             notes.forEach(note => {
-                hasNoteBeenPassed(cursor, note);
+                const noteType = note.dataset.note;
+                const sound = getSoundForNote(noteType, sounds);
+
+                const noteRect = note.getBoundingClientRect();
+                hasNoteBeenPassed(cursor, noteRect, sound);
             });
         });
     });
@@ -134,7 +146,7 @@ module.exports = { init: init };
 },{"./playSound":5}],5:[function(require,module,exports){
 const audioContext = require('./audioContext');
 
-function playSound(triggerEl, buffer, time) {
+function playSound(buffer, time, triggerEl) {
     const startTime = typeof time === 'undefined' ? audioContext.currentTime : time;
 
     /**
@@ -152,11 +164,13 @@ function playSound(triggerEl, buffer, time) {
     sourceNode.connect(audioContext.destination);
     sourceNode.start(startTime);
 
-    triggerEl.classList.add('is-playing');
+    if (typeof triggerEl !== 'undefined') {
+        triggerEl.classList.add('is-playing');
 
-    sourceNode.onended = () => {
-        triggerEl.classList.remove('is-playing');
-    };
+        sourceNode.onended = () => {
+            triggerEl.classList.remove('is-playing');
+        };
+    }
 }
 
 module.exports = playSound;

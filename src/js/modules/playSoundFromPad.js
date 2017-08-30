@@ -12,13 +12,13 @@ function playSoundFromPad(soundsArray) {
 
         pad.addEventListener('click', () => {
             if(note == 'hi-hat') {
-                playSound(pad, hiHat);
+                playSound(hiHat, pad);
             }
             else if(note == 'kick') {
-                playSound(pad, kick);
+                playSound(kick, pad);
             }
             else if(note == 'snare') {
-                playSound(pad, snare);
+                playSound(snare, pad);
             }
         });
     });
