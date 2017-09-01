@@ -9,30 +9,43 @@ $play-button-size: 50px;
     flex-wrap: wrap;
 }
 
+.p-rhythm__play-button {
+    @include reset-button;
+    background-color: #097ab5;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    float: left;
+    font-size: 1.3rem;
+    height: $play-button-size;
+    margin-left: 0 - $play-button-size;
+    margin-right: 30px;
+    outline: none;
+    width: $play-button-size;
+}
+
+// TODO: Mobile first stacking bars
 .p-rhythm__bar {
     flex: 0 0 25%;
-    padding: 30px 0;
-    border-left: 1px solid #333;
+    min-height: 60px;
+    border-left: 1px solid #444;
     text-align: center;
     margin-bottom: 30px;
     position: relative;
+    display: flex;
 
     &:nth-of-type(4n + 4) {
         border-right: 1px solid #333;
     }
 }
 
-.p-rhythm__play-button {
-    @include reset-button;
-    float: left;
-    background-color: #097ab5;
-    color: #fff;
-    font-size: 1.3rem;
-    margin-left: 0 - $play-button-size;
-    width: $play-button-size;
-    height: $play-button-size;
-    margin-right: 30px;
-    border-radius: 50%;
+.p-rhythm__column {
+    padding: 0 2px;
+    flex: 0 0 10%; // 10 columns currently
+
+    & + & {
+        border-left: 1px solid #ececec;
+    }
 }
 
 .p-rhythm__cursor {
@@ -45,7 +58,9 @@ $play-button-size: 50px;
 
     &.is-playing {
         width: 100%;
-        transition: width 5s linear;
+        transition-property: width;
+        transition-timing-function: linear;
+        // Transition duration is set via JS
     }
 }
 

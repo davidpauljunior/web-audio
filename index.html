@@ -8,28 +8,43 @@
         <link rel="stylesheet" href="dist/css/drums.css">
     </head>
     <body>
-        <button type"button" data-hook="play-button">Play</button>
-        <script src="./dist/js/main.js"></script>
-
         <main class="u-container">
-            <div class="c-kit">
-                <div class="c-kit__pad" data-note="hi-hat">
-                    <p class="c-kit__text">hi-hat</p>
-                </div>
-                <div class="c-kit__pad" data-note="kick">
-                    <p class="c-kit__text">kick</p>
-                </div>
-                <div class="c-kit__pad" data-note="snare">
-                    <p class="c-kit__text">snare</p>
-                </div>
-            </div>
-            
             <div class="p-rhythm" data-rhythm>
                 <button type="button" class="p-rhythm__play-button" data-play>Play</button>
                 <div class="p-rhythm__sheet">
                     <div class="p-rhythm__bar" data-bar>
                         <span class="p-rhythm__cursor" data-cursor></span>
-                        <span class="c-note" data-note="kick"></span>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                            <div class="c-note" data-note="hi-hat"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="hi-hat"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="snare"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="hi-hat"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                        </div>
+                        <div class="p-rhythm__column">
+                            <div class="c-note" data-note="kick"></div>
+                        </div>
                     </div>
                     <div class="p-rhythm__bar" data-bar>
                         <span class="p-rhythm__cursor" data-cursor></span>
@@ -62,5 +77,6 @@
                 </div>
             </div>
         </main>
+        <script src="./dist/js/main.js"></script>
     </body>
 </html>

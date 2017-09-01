@@ -1,26 +1,32 @@
+// TODO: Make the button pause - this means the left has to have been set, so can't just be 100%
+
 const playSound = require('./playSound');
 
-function hasNoteBeenPassed(cursor, noteRect, sound) {
+// TODO?: If we know that the notes must fit into certain spaces within a bar
+// then we can work out a time at which they should be played because we know the
+// length of the transition.
+// E.g: if the time to get through a bar is 10 seconds, and the bar is split into
+// 10 columns, we know that notes in column 1 should play after 1 second.
+// This would mean we're not doing any DOM watching so this function would disappear.
+// Would need to collect up all the notes from the bar and find out what column they're
+// in, then say at x seconds in that bar, play all those notes (hi hat and bass for example)
+function playNote(cursor, noteRect, sound) {
     const cursorRect = cursor.getBoundingClientRect();
-    
+
     if (cursorRect.right >= noteRect.left) {
-        console.log('note has now been passed')
         playSound(sound);
     } else {
-        console.log('not yet passed');
         window.requestAnimationFrame(()=> {
-            hasNoteBeenPassed(cursor, noteRect, sound);
+            playNote(cursor, noteRect, sound);
         });
     }
 }
 
-// Can the above could simply return a boolean??
-// Keep calling the request anim until it returns true.
-// if it returns true, call a different function called
-
 function getSoundForNote(noteType, sounds) {
     let sound;
-    if (noteType === 'kick') {
+    if (noteType === 'hi-hat') {
+        sound = sounds[0];
+    } else if (noteType === 'kick') {
         sound = sounds[1];
     } else if (noteType === 'snare') {
         sound = sounds[2];
@@ -29,45 +35,49 @@ function getSoundForNote(noteType, sounds) {
     return sound;
 }
 
-// doesn't require the sounds array
+function playBar(bar, sounds) {
+    const cursor = bar.querySelector('[data-cursor]');
+    const cursorRect = cursor.getBoundingClientRect();
+    const nextBar = cursor.parentNode.nextElementSibling;
+    
+    cursor.style.transitionDuration = "5s"; // This will come from a user configured
+    cursor.classList.add('is-playing');
+    
+    const notes = [...bar.querySelectorAll('[data-note]')];
+    
+    notes.forEach(note => {
+        const noteType = note.dataset.note;
+        const sound = getSoundForNote(noteType, sounds);
+        const noteRect = note.getBoundingClientRect();
+
+        playNote(cursor, noteRect, sound);
+    });
+
+    cursor.addEventListener("transitionend", event => {
+        cursor.classList.remove('has-played');
+
+        if (nextBar) {
+            playBar(nextBar);
+        } else {
+            console.log('got here');
+            return;
+        }
+    }, false);
+}
+
 function playRhythm(rhythm, sounds) {
-    const bars = [...rhythm.querySelectorAll('[data-bar]')];
+    const firstBar = rhythm.querySelector('[data-bar]');
     const playButton = rhythm.querySelector('[data-play]');
 
     playButton.addEventListener('click', () => {
-        bars.forEach((bar, i) => {
-            const cursor = bar.querySelector('[data-cursor]');
-            const cursorRect = cursor.getBoundingClientRect();
-
-            // needs to know when at end of that bar
-            // then up the counter to next bar
-            // let currentBar;
-            // Then once the cursor gets to the end, bump the currentBar to be bar, i++ ??;
-
-            // if (i === 0) { maybe something }
-
-            bar.dataset.currentBar = 'true';
-            cursor.classList.add('is-playing'); // starts the animation
-
-            const notes = [...bar.querySelectorAll('[data-note]')];
-
-            notes.forEach(note => {
-                const noteType = note.dataset.note;
-                const sound = getSoundForNote(noteType, sounds);
-
-                const noteRect = note.getBoundingClientRect();
-                hasNoteBeenPassed(cursor, noteRect, sound);
-            });
-        })  
+        playBar(firstBar, sounds);
     });
 }
 
 function init(sounds) {
-    const rhythms = [...document.querySelectorAll('[data-rhythm]')];
+    const rhythm = document.querySelector('[data-rhythm]');
 
-    rhythms.forEach(rhythm => {
-        playRhythm(rhythm, sounds);
-    });
+    playRhythm(rhythm, sounds);
 }
 
-module.exports = {init: init};
+module.exports = {init};
