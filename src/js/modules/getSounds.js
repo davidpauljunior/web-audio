@@ -1,4 +1,4 @@
-const audioContext = require('./audioContext');
+import audioContext from './audioContext';
 
 function decodeAudio(buffer) {
     return new Promise((resolve) => {
@@ -38,6 +38,6 @@ function init() {
     });
 }
 
-module.exports = {init: init};
+export default init;
 
 

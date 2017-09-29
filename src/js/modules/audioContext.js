@@ -6,4 +6,4 @@ function setAudioContext() {
     return ctx;
 }
 
-module.exports = ctx || setAudioContext();
+export default ctx || setAudioContext();
