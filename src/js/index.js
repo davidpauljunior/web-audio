@@ -17,7 +17,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Main from './layout/main';
-import getSounds from './modules/getSounds';
+// import getSounds from './modules/getSounds';
 
 ReactDOM.render(
     <Main />,

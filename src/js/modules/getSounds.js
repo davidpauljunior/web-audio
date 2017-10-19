@@ -26,11 +26,19 @@ async function fetchSound(file) {
 
 function init() {
     const soundFiles = ['hi-hat', 'kick', 'snare'];
-
+    
+    // Sounds promises calls a function which
+    // then calls arrayBuffer which returns a promise.
+    // So that function needs to wait for that promise.
+    // It then calls decode audio which returns a promise.
     const soundPromises = soundFiles.map(file => {
         return fetchSound(file);
     });
-
+    
+    // This function needs to wait for those promises before doing something.
+    // You should end up with the decoded buffers so something needs renaming here for clarity.
+    // Create a new promise here that resolves when all promises in soundPromises are resolved.
+    // Phew.
     return Promise.all(soundPromises).then(soundPromise => {
         return soundPromise;
     }).catch(err => {

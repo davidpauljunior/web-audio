@@ -1,4 +1,5 @@
 import React from 'react';
+// import getSounds from './modules/getSounds';
 
 export default class Rhythm extends React.Component {
     // https://stackoverflow.com/questions/38357234/is-it-possible-to-use-async-await-in-react-js
@@ -6,7 +7,8 @@ export default class Rhythm extends React.Component {
 
     // Trying to get the component to only return the HTML IF the await returns with sounds.
     // If it doesn't, it can return with a message in the UI saying couldn't retrieve sounds.
-    // But the UI furniture will still be there (not yet built).
+    // But the site furniture (which isn't yet built), will be there and built.
+    // So this particular component can return and error or something.
     async getAllSounds() {
         const sounds = await getSounds();
         // console.log(sounds);
