@@ -16,7 +16,7 @@
 import React from 'react';
 import Rhythm from './Rhythm';
 
-class RhythmContainer extends React.Component {
+export default class RhythmContainer extends React.Component {
     // Is this right!?
     constructor() {
         super();
@@ -41,11 +41,13 @@ class RhythmContainer extends React.Component {
                     console.log(`Fetch error: ${err}`);
                 })
             )
-
-            Promise.all(list)
-            .then(() => {
-                console.log('Requests finished')
-            })
         });
+
+        Promise.all(list)
+        .then(sounds => this.setState)
+    }
+    
+    render() {
+        return <Rhythm sounds={this.state.sounds} />;
     }
 }
