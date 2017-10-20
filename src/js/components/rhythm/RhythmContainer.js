@@ -31,7 +31,7 @@ class RhythmContainer extends React.Component {
         let list = []; // Need to name properly once clearer
         let results = []; 
 
-        soundFiles.forEach(file, i) {
+        soundFiles.forEach((file, i) => {
             list.push(
                 fetch(`./dist/audio/${file}.wav`)
                 .then(response => {
@@ -39,13 +39,13 @@ class RhythmContainer extends React.Component {
                 })
                 .catch(err=> {
                     console.log(`Fetch error: ${err}`);
-                });
-            );
+                })
+            )
 
             Promise.all(list)
             .then(() => {
                 console.log('Requests finished')
             })
-        }
+        });
     }
 }
