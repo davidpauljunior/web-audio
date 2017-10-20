@@ -14,40 +14,69 @@
  */
 
 import React from 'react';
-import Rhythm from './Rhythm';
+// TODO: Pass the sounds into Rhythm as props
+// import Rhythm from './Rhythm';
 
 export default class RhythmContainer extends React.Component {
     // Is this right!?
-    constructor() {
-        super();
-        this.state = { sounds: [] }
+    constructor(props) {
+        super(props);
+        this.state = { 
+            sound: null
+        };
     }
 
-    // https://reactjs.org/docs/react-component.html#componentwillmount
-    componentWillMount() {
-        // Not sure this should be inside this componentWillMount() function call
-        // https://stackoverflow.com/questions/29676408/html-fetch-multiple-files
-        const soundFiles = ['hi-hat', 'kick', 'snare'];
-        let list = []; // Need to name properly once clearer
-        let results = []; 
-
-        soundFiles.forEach((file, i) => {
-            list.push(
-                fetch(`./dist/audio/${file}.wav`)
-                .then(response => {
-                    results[i] = response;
-                })
-                .catch(err=> {
-                    console.log(`Fetch error: ${err}`);
-                })
-            )
-        });
-
-        Promise.all(list)
-        .then(sounds => this.setState)
+    // https://reactjs.org/docs/react-component.html#componentdidmount
+    componentDidMount() {
+        
+        fetch('./dist/audio/hi-hat.wav')
+            .then(res => {
+                this.setState({ 
+                    sound: res
+                });
+                // console.log(res); // returns a wav file
+                // this.state({posts});
+            });
     }
     
     render() {
-        return <Rhythm sounds={this.state.sounds} />;
+        console.log(this.state.sound); // This logs null, then the sound.  So the did mount DOES cause a re-render
+        // So you can say if it's null, show a loading thing, else pass the prop into the component?
+        // Or at the presentation layer you can say if null there, should loading otherwise show the html or something.
+        return (
+            <div>{this.state.sound}</div>
+        );
+        // return <Rhythm sounds={this.state.sounds} />;
     }
 }
+
+
+
+// Not sure this should be inside this componentWillMount() function call
+// https://stackoverflow.com/questions/29676408/html-fetch-multiple-files
+// const soundFiles = ['hi-hat', 'kick', 'snare'];
+// let list = []; // Need to name properly once clearer
+// let ressults = [];  // TODO: What is the purpose of this?
+
+// TODO: .map instead of pushing to list?
+// soundFiles.forEach((file, i) => {
+//     list.push(
+//         fetch(`./dist/audio/${file}.wav`)
+//         .then(response => {
+//             results[i] = response;
+//         })
+//         .catch(err=> {
+//             console.log(`Fetch error: ${err}`);
+//         })
+//     )
+// });
+
+// READ THIS: https://daveceddia.com/ajax-requests-in-react/
+// Promise.all(list)
+// Fat arrow 'this'
+// https://stackoverflow.com/questions/34483888/difference-between-bind-and-var-self-this
+// .then(list => {
+//     this.setState({
+//         sounds: list
+//     });
+// });

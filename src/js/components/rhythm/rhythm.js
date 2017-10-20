@@ -1,9 +1,9 @@
 import React from 'react';
 // import getSounds from './modules/getSounds';
 
-const Commentlist = sounds => (
+const Commentlist = sounds => {
     <div>{sounds}</div>
-  )
+}
 
 // export default class Rhythm extends React.Component {
 //     // https://stackoverflow.com/questions/38357234/is-it-possible-to-use-async-await-in-react-js
