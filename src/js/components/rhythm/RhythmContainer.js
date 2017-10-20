@@ -18,33 +18,54 @@ import React from 'react';
 // import Rhythm from './Rhythm';
 
 export default class RhythmContainer extends React.Component {
-    // Is this right!?
+    // TODO: what is props doing here?
     constructor(props) {
         super(props);
         this.state = { 
-            sound: null
+            sounds: [] // will now need to check array.length (See comments below about loading)
         };
     }
 
     // https://reactjs.org/docs/react-component.html#componentdidmount
     componentDidMount() {
-        
-        fetch('./dist/audio/hi-hat.wav')
-            .then(res => {
-                this.setState({ 
-                    sound: res
-                });
-                // console.log(res); // returns a wav file
-                // this.state({posts});
+        const fileNames = ['hi-hat', 'kick', 'snare'];
+
+        Promise.all( // Because this doesn't return a promise YET!  In the old code, the promise the decode audio function returned a Promise. So whatever called it had to promise.all them.
+            fileNames.map(file => {
+                fetch(`./dist/audio/${file}.wav`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw Error(response.statusText);
+                        }
+                        return response;
+                    })
+                    .then(res => console.log(res)) // this logs the response correctly
+                    .catch(err => console.log(err));
+            })
+        )
+        .then(res => {
+            this.setState({
+                sounds: res
             });
+        })
+
+        // fetch('./dist/audio/hi-hat.wav')
+        //     .then(res => {
+        //         this.setState({
+        //             sound: res
+        //         });
+        //     })
+        //     .catch(err => {
+        //         console.log(`Response failed: ${err}`);
+        //     });
     }
     
     render() {
-        console.log(this.state.sound); // This logs null, then the sound.  So the did mount DOES cause a re-render
+        console.log(this.state.sounds); // This logs null, then the sound.  So the did mount DOES cause a re-render
         // So you can say if it's null, show a loading thing, else pass the prop into the component?
         // Or at the presentation layer you can say if null there, should loading otherwise show the html or something.
         return (
-            <div>{this.state.sound}</div>
+            <div>{this.state.sounds}</div>
         );
         // return <Rhythm sounds={this.state.sounds} />;
     }
