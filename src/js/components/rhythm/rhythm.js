@@ -1,8 +1,24 @@
 import React from 'react';
-// import getSounds from './modules/getSounds';
 
-const Commentlist = sounds => {
-    <div>{sounds}</div>
+/**
+ * If it turns out that this doesn't render to the DOM,
+ * then make it another container (or hoist data shit up into RhythmContainer (where most data comes from anyway))
+ */
+
+export default class Rhythm extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        if (this.props.sounds.length) {
+            return (
+                <div>The sounds array has a length of {this.props.sounds.length}</div>
+            );
+        } else {
+            return null;
+        }
+    }
 }
 
 // export default class Rhythm extends React.Component {
