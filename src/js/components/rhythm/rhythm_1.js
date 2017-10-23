@@ -2,7 +2,11 @@ import React from 'react';
 
 /**
  * If it turns out that this doesn't render to the DOM,
- * then make it another container (or hoist data shit up into RhythmContainer (where most data comes from anyway))
+ * then make it another container (or hoist data shit up 
+ * into RhythmContainer (where most data comes from anyway))
+ * 
+ * Question is, what should render the bar HTML?
+ * 
  */
 
 export default class Rhythm extends React.Component {
