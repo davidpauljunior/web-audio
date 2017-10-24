@@ -30,12 +30,18 @@ export default class RhythmContainer extends React.Component {
                     }
                     return response.arrayBuffer();
                 })
+                .then(buffer => {
+                    audioContext.decodeAudioData(buffer, decodedData => {
+                        console.log(decodedData); // This logs the decoded file.  So need this to be returned back up?
+                        return decodedData;
+                    });
+                })
                 .catch(err => console.log(err));
         });
 
-        Promise.all(promises).then(buffers => {
+        Promise.all(promises).then(decodedBuffers => {
             this.setState({
-                sounds: buffers
+                sounds: decodedBuffers
             });
         });
 
