@@ -1,0 +1,8 @@
+.l-grid {
+    display: grid;
+    grid-template-columns: 40px auto;
+}
+
+.l-grid__item {
+    grid-column: 2; // If no end line value is declared, the item will span 1 track by default.
+}

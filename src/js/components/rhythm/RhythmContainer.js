@@ -31,9 +31,12 @@ export default class RhythmContainer extends React.Component {
                     return response.arrayBuffer();
                 })
                 .then(buffer => {
-                    audioContext.decodeAudioData(buffer, decodedData => {
-                        console.log(decodedData); // This logs the decoded file.  So need this to be returned back up?
-                        return decodedData;
+                    // I don't know why this needs to be a 
+                    // new promise (thought decodeAudioData returns a promise)
+                    return new Promise(resolve => {
+                        audioContext.decodeAudioData(buffer, decodedData => {
+                            resolve(decodedData);
+                        });
                     });
                 })
                 .catch(err => console.log(err));
@@ -44,11 +47,6 @@ export default class RhythmContainer extends React.Component {
                 sounds: decodedBuffers
             });
         });
-
-        /**
-         * TODO: Audio context part
-         * Need the arrayBuffer promise to be passed into decodeAudio
-         */
     }
 
     render() {

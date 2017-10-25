@@ -6,7 +6,6 @@ import React from 'react';
  * into RhythmContainer (where most data comes from anyway))
  * 
  * Question is, what should render the bar HTML?
- * 
  */
 
 export default class Rhythm extends React.Component {
@@ -17,7 +16,12 @@ export default class Rhythm extends React.Component {
     render () {
         if (this.props.sounds.length) {
             return (
-                <div>The sounds array has a length of {this.props.sounds.length}</div>
+                <div>
+                    <div>The sounds array has a length of {this.props.sounds.length}</div>
+                    <div className="l-grid">
+                        <div className="l-grid__item">What happens to me?</div>
+                    </div>
+                </div>
             );
         } else {
             return null;
