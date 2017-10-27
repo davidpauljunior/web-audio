@@ -80,4 +80,4 @@ function init(sounds) {
     playRhythm(rhythm, sounds);
 }
 
-module.exports = {init};
+export default init;

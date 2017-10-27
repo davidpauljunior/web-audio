@@ -19,11 +19,12 @@
 "40-base/typography";
 
 @import
-"50-components/kit",
-"50-components/note";
+"50-layout/grid";
 
 @import
-"60-patterns/rhythm";
+"60-components/kit",
+"60-components/note",
+"60-components/rhythm";
 
 @import
 "70-utilities/container";
