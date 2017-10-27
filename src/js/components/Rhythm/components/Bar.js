@@ -28,6 +28,23 @@ export default class Bar extends React.Component {
 
     componentDidMount() {
         let updatedCells = this.state.cells.slice() //copy the array
+        const numberOfNotes = 30;
+        const noteAttributeValues = ['hi-hat', 'kick', 'snare'];
+
+        for (let i = 0; i < numberOfNotes; i++) {
+            const randomNote = noteAttributeValues[randomInteger(0, noteAttributeValues.length)];
+            const randomCell = updatedCells[randomInteger(0, updatedCells.length)];
+
+            // https://stackoverflow.com/questions/29103096/dynamic-attribute-in-reactjs
+            // STUCK HERE
+        
+            // var opts = {
+            //     'data-note': randomNote
+            // };
+
+            randomCell.setAttribute('data-note', randomNote);
+        }
+
         updatedCells[1] = (<span key='1' className="c-bar__cell"></span>); //execute the manipulations
         this.setState({
             cells: updatedCells
