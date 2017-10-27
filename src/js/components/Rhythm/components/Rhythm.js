@@ -1,4 +1,5 @@
 import React from 'react';
+import Bar from "./Bar";
 
 /**
  * If it turns out that this doesn't render to the DOM,
@@ -6,6 +7,11 @@ import React from 'react';
  * into RhythmContainer (where most data comes from anyway))
  * 
  * Question is, what should render the bar HTML?
+ * 
+ * Currently this is generating a single bar.  I could pass a config through from RhythmContainer and loop through that number?
+ * That will ultimately allow the state to change based on an 'addition' of a bar which will cause a re-render.
+ * 
+ * Question: should bar be a separate container?
  */
 
 export default class Rhythm extends React.Component {
@@ -16,10 +22,13 @@ export default class Rhythm extends React.Component {
     render () {
         if (this.props.sounds.length) {
             return (
+                // TODO: make this outer grid
                 <div>
-                    <div>The sounds array has a length of {this.props.sounds.length}</div>
-                    <div className="l-grid">
-                        <div className="l-grid__item">What happens to me?</div>
+                    <div>
+                        <button>Play</button>
+                    </div>
+                    <div>
+                        <Bar />
                     </div>
                 </div>
             );
